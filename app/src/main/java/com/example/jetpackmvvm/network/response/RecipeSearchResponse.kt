@@ -1,6 +1,6 @@
 package com.example.jetpackmvvm.network.response
 
-import com.example.jetpackmvvm.network.model.RecipeNetworkEntity
+import com.example.jetpackmvvm.network.model.RecipeDto
 import com.google.gson.annotations.SerializedName
 
 class RecipeSearchResponse(
@@ -8,5 +8,5 @@ class RecipeSearchResponse(
     var count: Int,
 
     @SerializedName("results")
-    var recipes: List<RecipeNetworkEntity>
+    var recipes: List<RecipeDto>
 )
