@@ -3,6 +3,7 @@ package com.example.jetpackmvvm
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -22,18 +23,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jetpackmvvm.ui.theme.JetpackMVVMTheme
+import com.example.jetpackmvvm.ui.views.RecipeListFragment
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            JetpackMVVMTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    MainContent()
-                }
-            }
-        }
+        setContentView(R.layout.activity_main)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.main_container, RecipeListFragment())
+            .commit()
     }
 }
 
