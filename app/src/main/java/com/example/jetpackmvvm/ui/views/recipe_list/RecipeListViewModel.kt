@@ -1,21 +1,31 @@
 package com.example.jetpackmvvm.ui.views.recipe_list
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.jetpackmvvm.domain.model.Recipe
 import com.example.jetpackmvvm.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
 class RecipeListViewModel @Inject constructor(
-    private val randomString: String,
     private val repository: RecipeRepository,
     @Named("auth_token") private val token: String
 ): ViewModel(){
-    init {
 
-        println("VIEWMODEL: $randomString")
-        println("VIEWMODEL: $repository")
-        println("VIEWMODEL: $token")
+    val recipes: MutableState<List<Recipe>> = mutableStateOf(listOf())
+    init {
+        viewModelScope.launch {
+            val result = repository.search(
+                token = token,
+                page = 1,
+                query = "chicken"
+            )
+            recipes.value = result
+        }
     }
 }
