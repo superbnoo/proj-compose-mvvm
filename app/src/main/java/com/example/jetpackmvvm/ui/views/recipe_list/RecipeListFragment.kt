@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.jetpackmvvm.ui.components.FoodCategoryChip
 import com.example.jetpackmvvm.ui.components.RecipeCard
+import com.example.jetpackmvvm.ui.components.SearchAppBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -49,65 +50,13 @@ class RecipeListFragment: Fragment() {
                 val selectedCategory = viewModel.selectedCategory.value
 
                 Column {
-                    Surface(
-                        elevation = 8.dp,
-                        modifier = Modifier.fillMaxWidth(),
-                        color = Color.White,
-                    ) {
-                        Column {
-                            Row(
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                TextField(
-                                    value = query,
-                                    modifier = Modifier
-                                        .fillMaxWidth(0.95f)
-                                        .padding(8.dp),
-                                    onValueChange = { newValue ->
-                                        viewModel.onQueryChange(newValue)
-                                    },
-                                    label = {
-                                        Text(text = "Search")
-                                    },
-                                    keyboardOptions = KeyboardOptions(
-                                        keyboardType = KeyboardType.Text,
-                                        imeAction = ImeAction.Done
-                                    ),
-                                    leadingIcon = {
-                                        Icon(Icons.Filled.Search, contentDescription = null)
-                                    },
-                                    keyboardActions = KeyboardActions(
-                                        onDone = {
-                                            viewModel.newSearch()
-                                            keyboardController?.hideSoftwareKeyboard()
-                                        },
-                                    ),
-                                    textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
-                                    colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface),
-                                )
-                            }
-                            val scrollState = rememberLazyListState()
-                            LazyRow(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(start = 8.dp, bottom = 8.dp),
-                                state = scrollState,
-                            ) {
-                                items(getAllFoodCategories()){ category ->
-                                    FoodCategoryChip(
-                                        category = category.value,
-                                        isSelected = category == selectedCategory,
-                                        onExecuteSearch = viewModel::newSearch,
-                                        onSelectedCategoryChange = {
-                                            viewModel.onSelectedCategoryChange(it)
-                                        }
-                                    )
-                                }
-                            }
-                        }
-
-
-                    }
+                    SearchAppBar(
+                        query = query,
+                        onQueryChange = viewModel::onQueryChange,
+                        onExecuteSearch = viewModel::newSearch,
+                        selectedCategory = selectedCategory,
+                        onSelectedCategoryChange = viewModel::onSelectedCategoryChange
+                    )
                     LazyColumn {
                         itemsIndexed(
                             items = recipes
