@@ -34,14 +34,15 @@ class RecipeListFragment: Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 val recipes = viewModel.recipes.value
-                val (query, setQuery) = remember { mutableStateOf("beef") }
+                //  val (query, setQuery) = remember { mutableStateOf("beef") }
+                val query = viewModel.query.value
 
                 Column {
                     TextField(
                         value = query,
-                        onValueChange = {
-                            setQuery(it)
-                         }
+                        onValueChange = { newValue ->
+                            viewModel.onQueryChange(newValue)
+                        }
                     )
                     Spacer(modifier = Modifier.padding(10.dp))
                     LazyColumn {
