@@ -39,6 +39,8 @@ class MainActivity : AppCompatActivity() {
     private val TAG: String = "AppDebug"
     @Inject
     lateinit var someRandomString: String
+    @Inject
+    lateinit var app: BaseApplication
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         Log.d(TAG, "onCreate: $someRandomString")
+        Log.d(TAG, "onCreate: $app")
     }
 }
 
