@@ -9,11 +9,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.jetpackmvvm.R
 import com.example.jetpackmvvm.domain.model.Recipe
+import com.example.jetpackmvvm.util.DEFAULT_RECIPE_IMAGE
+import com.example.jetpackmvvm.util.loadPicture
 
 @Composable
 fun RecipeCard(
@@ -30,28 +33,35 @@ fun RecipeCard(
     ) {
         Column {
             recipe.featuredImage?.let { url ->
-                Image(
-                    painter = painterResource(id = R.drawable.empty_plate),
-                    contentDescription = "",
-                    modifier = Modifier.fillMaxWidth()
-                        .height(255.dp),
-                    contentScale = ContentScale.Crop,
-                )
+                val image = loadPicture(url, DEFAULT_RECIPE_IMAGE).value
+                image?.let {
+                    Image(
+                        bitmap = image.asImageBitmap(),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(255.dp),
+                        contentScale = ContentScale.Crop,
+                    )
+                }
             }
             recipe.title?.let { title ->
                 Row(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(top = 12.dp, bottom = 12.dp, start = 8.dp, end = 8.dp)
                 ) {
                     Text(
                         text = title,
-                        modifier = Modifier.fillMaxWidth(0.85f)
+                        modifier = Modifier
+                            .fillMaxWidth(0.85f)
                             .wrapContentWidth(Alignment.Start),
                         style = MaterialTheme.typography.h5
                     )
                     Text(
                         text = recipe.rating.toString(),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .wrapContentWidth(Alignment.End)
                             .align(Alignment.CenterVertically),
                         style = MaterialTheme.typography.h6
