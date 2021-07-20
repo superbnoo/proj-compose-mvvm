@@ -46,6 +46,8 @@ class RecipeListFragment: Fragment() {
                 //  val (query, setQuery) = remember { mutableStateOf("beef") }
                 val query = viewModel.query.value
 
+                val selectedCategory = viewModel.selectedCategory.value
+
                 Column {
                     Surface(
                         elevation = 8.dp,
@@ -76,7 +78,7 @@ class RecipeListFragment: Fragment() {
                                     },
                                     keyboardActions = KeyboardActions(
                                         onDone = {
-                                            viewModel.newSearch(query)
+                                            viewModel.newSearch()
                                             keyboardController?.hideSoftwareKeyboard()
                                         },
                                     ),
@@ -87,15 +89,17 @@ class RecipeListFragment: Fragment() {
                             val scrollState = rememberLazyListState()
                             LazyRow(
                                 modifier = Modifier
+                                    .fillMaxWidth()
                                     .padding(start = 8.dp, bottom = 8.dp),
                                 state = scrollState,
                             ) {
                                 items(getAllFoodCategories()){ category ->
                                     FoodCategoryChip(
                                         category = category.value,
-                                        onExecuteSearch = {
-                                            viewModel.onQueryChange(it)
-                                            viewModel.newSearch(it)
+                                        isSelected = category == selectedCategory,
+                                        onExecuteSearch = viewModel::newSearch,
+                                        onSelectedCategoryChange = {
+                                            viewModel.onSelectedCategoryChange(it)
                                         }
                                     )
                                 }
