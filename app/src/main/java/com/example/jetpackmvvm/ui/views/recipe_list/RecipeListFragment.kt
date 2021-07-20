@@ -12,8 +12,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -28,6 +30,7 @@ class RecipeListFragment: Fragment() {
 
     private val viewModel: RecipeListViewModel by viewModels()
 
+    @OptIn(ExperimentalComposeUiApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,6 +39,8 @@ class RecipeListFragment: Fragment() {
 
         return ComposeView(requireContext()).apply {
             setContent {
+                val keyboardController = LocalSoftwareKeyboardController.current
+
                 val recipes = viewModel.recipes.value
                 //  val (query, setQuery) = remember { mutableStateOf("beef") }
                 val query = viewModel.query.value
@@ -71,6 +76,7 @@ class RecipeListFragment: Fragment() {
                                 keyboardActions = KeyboardActions(
                                     onDone = {
                                         viewModel.newSearch(query)
+                                        keyboardController?.hideSoftwareKeyboard()
                                     },
                                 ),
                                 textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
