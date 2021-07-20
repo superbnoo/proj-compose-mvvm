@@ -13,8 +13,10 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -22,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.jetpackmvvm.ui.views.recipe_list.FoodCategory
 import com.example.jetpackmvvm.ui.views.recipe_list.getAllFoodCategories
 
+@ExperimentalComposeUiApi
 @Composable
 fun SearchAppBar(
     query: String,
@@ -30,6 +33,8 @@ fun SearchAppBar(
     selectedCategory: FoodCategory?,
     onSelectedCategoryChange: (String) -> Unit
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Surface(
         elevation = 8.dp,
         modifier = Modifier.fillMaxWidth(),
@@ -60,7 +65,7 @@ fun SearchAppBar(
                     keyboardActions = KeyboardActions(
                         onDone = {
                             onExecuteSearch()
-                            // keyboardController?.hideSoftwareKeyboard()
+                            keyboardController?.hideSoftwareKeyboard()
                         },
                     ),
                     textStyle = TextStyle(color = MaterialTheme.colors.onSurface),

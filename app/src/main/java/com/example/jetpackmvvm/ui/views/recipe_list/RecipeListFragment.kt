@@ -41,7 +41,6 @@ class RecipeListFragment: Fragment() {
 
         return ComposeView(requireContext()).apply {
             setContent {
-                val keyboardController = LocalSoftwareKeyboardController.current
 
                 val recipes = viewModel.recipes.value
                 //  val (query, setQuery) = remember { mutableStateOf("beef") }
