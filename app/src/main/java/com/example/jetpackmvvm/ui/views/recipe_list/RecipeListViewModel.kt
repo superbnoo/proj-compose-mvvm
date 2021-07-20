@@ -19,7 +19,7 @@ class RecipeListViewModel @Inject constructor(
 
     val recipes: MutableState<List<Recipe>> = mutableStateOf(listOf())
 
-    val query = mutableStateOf("chicken")
+    val query = mutableStateOf("")
 
     init {
         newSearch(query.value)
