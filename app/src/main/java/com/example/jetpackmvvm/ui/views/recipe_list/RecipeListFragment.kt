@@ -22,10 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.jetpackmvvm.ui.components.CircularProgressBar
-import com.example.jetpackmvvm.ui.components.FoodCategoryChip
-import com.example.jetpackmvvm.ui.components.RecipeCard
-import com.example.jetpackmvvm.ui.components.SearchAppBar
+import com.example.jetpackmvvm.ui.components.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -63,6 +60,10 @@ class RecipeListFragment: Fragment() {
                     Box(
                         modifier = Modifier.fillMaxSize()
                     ) {
+                        if (loading) {
+                            LoadingRecipeListShimmer(imageHeight = 250.dp)
+                        }
+
                         LazyColumn {
                             itemsIndexed(
                                 items = recipes
