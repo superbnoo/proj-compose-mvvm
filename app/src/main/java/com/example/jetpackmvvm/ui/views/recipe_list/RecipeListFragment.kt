@@ -71,7 +71,7 @@ class RecipeListFragment: Fragment() {
                             }
                         }
 
-                        CircularProgressBar(loading)
+                        CircularProgressBar(loading, 0.3f)
                     }
                 }
             }
