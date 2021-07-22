@@ -11,7 +11,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -56,39 +59,94 @@ class RecipeListFragment: Fragment() {
 
                     val loading = viewModel.loading.value
 
-                    Column {
-                        SearchAppBar(
-                            query = query,
-                            onQueryChange = viewModel::onQueryChange,
-                            onExecuteSearch = viewModel::newSearch,
-                            selectedCategory = selectedCategory,
-                            onSelectedCategoryChange = viewModel::onSelectedCategoryChange,
-                            onToggleTheme = {
-                                application.toggleTheme()
-                            }
-                        )
-
-                        Box(
-                            modifier = Modifier.fillMaxSize()
-                                .background(color = MaterialTheme.colors.background)
-                        ) {
-                            if (loading) {
-                                LoadingRecipeListShimmer(imageHeight = 250.dp)
-                            }
-
-                            LazyColumn {
-                                itemsIndexed(
-                                    items = recipes
-                                ) { index, recipe ->
-                                    RecipeCard(recipe = recipe, onClick = {})
+                    Scaffold(
+                        topBar = {
+                            SearchAppBar(
+                                query = query,
+                                onQueryChange = viewModel::onQueryChange,
+                                onExecuteSearch = viewModel::newSearch,
+                                selectedCategory = selectedCategory,
+                                onSelectedCategoryChange = viewModel::onSelectedCategoryChange,
+                                onToggleTheme = {
+                                    application.toggleTheme()
                                 }
-                            }
+                            )
+                        },
+                        bottomBar = {
+                            MyBottomBar()
+                        },
+                        drawerContent = {
+                            MyDrawer()
+                        },
+                        content = {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(color = MaterialTheme.colors.background)
+                            ) {
+                                if (loading) {
+                                    LoadingRecipeListShimmer(imageHeight = 250.dp)
+                                }
 
-                            CircularProgressBar(loading, 0.3f)
+                                LazyColumn {
+                                    itemsIndexed(
+                                        items = recipes
+                                    ) { index, recipe ->
+                                        RecipeCard(recipe = recipe, onClick = {})
+                                    }
+                                }
+
+                                CircularProgressBar(loading, 0.3f)
+                            }
                         }
-                    }
+                    )
                 }
             }
         }
     }
 }
+
+@Composable
+fun MyBottomBar() {
+    BottomNavigation(
+        elevation = 12.dp
+    ) {
+        BottomNavigationItem(
+            icon = {
+                (Icon(Icons.Default.ArrowBack, contentDescription = null))
+            },
+            selected = true,
+            onClick = {  }
+        )
+        BottomNavigationItem(
+            icon = {
+                (Icon(Icons.Default.Search, contentDescription = null))
+            },
+            selected = false,
+            onClick = {  }
+        )
+        BottomNavigationItem(
+            icon = {
+                (Icon(Icons.Default.AccountCircle, contentDescription = null))
+            },
+            selected = false,
+            onClick = {  }
+        )
+    }
+}
+
+@Composable
+fun MyDrawer() {
+    Column() {
+        Text("Item1")
+        Text("Item1")
+        Text("Item1")
+        Text("Item1")
+
+
+    }
+}
+
+
+
+
