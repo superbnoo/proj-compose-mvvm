@@ -22,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jetpackmvvm.network.RecipeService
-import com.example.jetpackmvvm.ui.theme.JetpackMVVMTheme
 import com.google.gson.GsonBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -123,13 +122,5 @@ fun MainContent() {
             }
 
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    JetpackMVVMTheme {
-        MainContent()
     }
 }
