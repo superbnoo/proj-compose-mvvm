@@ -1,6 +1,7 @@
 package com.example.jetpackmvvm.ui.views.recipe_list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,7 @@ import androidx.fragment.app.viewModels
 import com.example.jetpackmvvm.BaseApplication
 import com.example.jetpackmvvm.ui.components.*
 import com.example.jetpackmvvm.ui.theme.AppTheme
+import com.example.jetpackmvvm.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -59,6 +61,8 @@ class RecipeListFragment: Fragment() {
 
                     val loading = viewModel.loading.value
 
+                    val page = viewModel.page.value
+
                     Scaffold(
                         topBar = {
                             SearchAppBar(
@@ -72,19 +76,13 @@ class RecipeListFragment: Fragment() {
                                 }
                             )
                         },
-                        bottomBar = {
-                            MyBottomBar()
-                        },
-                        drawerContent = {
-                            MyDrawer()
-                        },
                         content = {
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(color = MaterialTheme.colors.background)
                             ) {
-                                if (loading) {
+                                if (loading && recipes.isEmpty()) {
                                     LoadingRecipeListShimmer(imageHeight = 250.dp)
                                 }
 
@@ -92,6 +90,11 @@ class RecipeListFragment: Fragment() {
                                     itemsIndexed(
                                         items = recipes
                                     ) { index, recipe ->
+                                        viewModel.onChangeRecipeScrollPosition(index)
+                                        if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
+                                            // Log.d(TAG, "position on scroll - before calling nextPage $index")
+                                            viewModel.nextPage()
+                                        }
                                         RecipeCard(recipe = recipe, onClick = {})
                                     }
                                 }
