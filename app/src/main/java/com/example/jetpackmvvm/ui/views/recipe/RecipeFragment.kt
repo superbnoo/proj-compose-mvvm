@@ -15,11 +15,17 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.example.jetpackmvvm.BaseApplication
+import com.example.jetpackmvvm.ui.components.RecipeView
+import com.example.jetpackmvvm.ui.theme.AppTheme
 import com.example.jetpackmvvm.ui.views.recipe_list.RecipeListViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecipeFragment: Fragment() {
+    @Inject
+    lateinit var application: BaseApplication
 
     private val viewModel: RecipeViewModel by viewModels()
 
@@ -37,21 +43,22 @@ class RecipeFragment: Fragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
+                AppTheme(darkTheme = application.isDark.value) {
+                    val loading = viewModel.loading.value
+                    val recipe = viewModel.recipe.value
 
-                val loading = viewModel.loading.value
-                val recipe = viewModel.recipe.value
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
 
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        text = recipe?.let {
-                            "Selected recipeId: ${recipe.title}"
-                        } ?: "Loading...",
-                        style = TextStyle(
-                            fontSize = 21.sp
-                        )
-                    )
+                        recipe?.let {
+                            RecipeView(
+                                recipe = recipe
+                            )
+                        } ?: Text(text = "Loading...")
+
+
+                    }
                 }
             }
         }

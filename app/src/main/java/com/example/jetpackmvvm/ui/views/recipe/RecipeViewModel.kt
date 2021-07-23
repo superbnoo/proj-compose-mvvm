@@ -9,7 +9,6 @@ import com.example.jetpackmvvm.domain.model.Recipe
 import com.example.jetpackmvvm.repository.RecipeRepository
 import com.example.jetpackmvvm.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
