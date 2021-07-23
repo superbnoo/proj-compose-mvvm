@@ -14,11 +14,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.example.jetpackmvvm.ui.views.recipe_list.RecipeListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RecipeFragment: Fragment() {
+
+    private val viewModel: RecipeViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.getInt("recipeId")?.let { rId ->
+            viewModel.onTriggerEvent(RecipeEvent.GetRecipeEvent(rId))
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,11 +37,17 @@ class RecipeFragment: Fragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
+
+                val loading = viewModel.loading.value
+                val recipe = viewModel.recipe.value
+
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        text = "RECIPE FRAGMENT",
+                        text = recipe?.let {
+                            "Selected recipeId: ${recipe.title}"
+                        } ?: "Loading...",
                         style = TextStyle(
                             fontSize = 21.sp
                         )

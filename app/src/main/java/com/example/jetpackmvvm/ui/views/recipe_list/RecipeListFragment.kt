@@ -29,7 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.jetpackmvvm.BaseApplication
+import com.example.jetpackmvvm.R
 import com.example.jetpackmvvm.ui.components.*
 import com.example.jetpackmvvm.ui.theme.AppTheme
 import com.example.jetpackmvvm.ui.util.SnackbarController
@@ -111,7 +113,11 @@ class RecipeListFragment: Fragment() {
                                 page = page,
                                 onChangeRecipeScrollPosition = viewModel::onChangeRecipeScrollPosition,
                                 onTriggerEvent = viewModel::onTriggerEvent,
-                                scaffoldState = scaffoldState
+                                scaffoldState = scaffoldState,
+                                snackbarController = snackbarController,
+                                navigateToRecipeItem = {
+                                    findNavController().navigate(R.id.viewRecipe, it)
+                                }
                             )
                         }
                     )
