@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,11 +28,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.jetpackmvvm.BaseApplication
 import com.example.jetpackmvvm.ui.components.*
 import com.example.jetpackmvvm.ui.theme.AppTheme
+import com.example.jetpackmvvm.ui.util.SnackbarController
 import com.example.jetpackmvvm.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -42,7 +46,12 @@ class RecipeListFragment: Fragment() {
     @Inject
     lateinit var application: BaseApplication
 
-    @OptIn(ExperimentalComposeUiApi::class)
+    @OptIn(ExperimentalMaterialApi::class)
+    private val snackbarController = SnackbarController(lifecycleScope)
+
+    @OptIn(ExperimentalComposeUiApi::class,
+        androidx.compose.material.ExperimentalMaterialApi::class
+    )
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,18 +72,37 @@ class RecipeListFragment: Fragment() {
 
                     val page = viewModel.page.value
 
+                    val scaffoldState = rememberScaffoldState()
+
                     Scaffold(
                         topBar = {
                             SearchAppBar(
                                 query = query,
                                 onQueryChange = viewModel::onQueryChange,
-                                onExecuteSearch = viewModel::newSearch,
+                                onExecuteSearch = {
+                                    if (viewModel.selectedCategory.value?.value == "Milk"){
+                                        snackbarController.getScope().launch {
+                                            snackbarController.showSnackbar(
+                                                scaffoldState = scaffoldState,
+                                                message = "Invalid category: MILK",
+                                                actionLabel = "Hide"
+                                            )
+                                        }
+                                    }
+                                    else{
+                                        viewModel.onTriggerEvent(RecipeListEvent.NewSearchEvent)
+                                    }
+                                },
                                 selectedCategory = selectedCategory,
                                 onSelectedCategoryChange = viewModel::onSelectedCategoryChange,
                                 onToggleTheme = {
                                     application.toggleTheme()
                                 }
                             )
+                        },
+                        scaffoldState = scaffoldState,
+                        snackbarHost = {
+                            scaffoldState.snackbarHostState
                         },
                         content = {
                             Box(
@@ -93,13 +121,22 @@ class RecipeListFragment: Fragment() {
                                         viewModel.onChangeRecipeScrollPosition(index)
                                         if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
                                             // Log.d(TAG, "position on scroll - before calling nextPage $index")
-                                            viewModel.nextPage()
+                                            viewModel.onTriggerEvent(RecipeListEvent.NextPageEvent)
                                         }
                                         RecipeCard(recipe = recipe, onClick = {})
                                     }
                                 }
 
                                 CircularProgressBar(loading, 0.3f)
+
+
+                                DefaultSnackbar(
+                                    snackbarHostState = scaffoldState.snackbarHostState,
+                                    onDismiss = {
+                                        scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
+                                    },
+                                    modifier = Modifier.align(Alignment.BottomCenter)
+                                )
                             }
                         }
                     )

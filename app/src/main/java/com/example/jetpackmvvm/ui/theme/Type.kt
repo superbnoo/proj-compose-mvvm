@@ -1,5 +1,6 @@
 package com.example.jetpackmvvm.ui.theme
 
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Typography
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -71,8 +72,7 @@ val QuickSandTypography = Typography(
     button = TextStyle(
         fontFamily = QuickSand,
         fontWeight = FontWeight.W400,
-        fontSize = 15.sp,
-        color = Color.White
+        fontSize = 15.sp
     ),
     caption = TextStyle(
         fontFamily = QuickSand,
