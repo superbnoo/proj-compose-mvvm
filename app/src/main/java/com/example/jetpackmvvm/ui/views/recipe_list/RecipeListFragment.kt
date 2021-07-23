@@ -105,39 +105,14 @@ class RecipeListFragment: Fragment() {
                             scaffoldState.snackbarHostState
                         },
                         content = {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(color = MaterialTheme.colors.background)
-                            ) {
-                                if (loading && recipes.isEmpty()) {
-                                    LoadingRecipeListShimmer(imageHeight = 250.dp)
-                                }
-
-                                LazyColumn {
-                                    itemsIndexed(
-                                        items = recipes
-                                    ) { index, recipe ->
-                                        viewModel.onChangeRecipeScrollPosition(index)
-                                        if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
-                                            // Log.d(TAG, "position on scroll - before calling nextPage $index")
-                                            viewModel.onTriggerEvent(RecipeListEvent.NextPageEvent)
-                                        }
-                                        RecipeCard(recipe = recipe, onClick = {})
-                                    }
-                                }
-
-                                CircularProgressBar(loading, 0.3f)
-
-
-                                DefaultSnackbar(
-                                    snackbarHostState = scaffoldState.snackbarHostState,
-                                    onDismiss = {
-                                        scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
-                                    },
-                                    modifier = Modifier.align(Alignment.BottomCenter)
-                                )
-                            }
+                            RecipeList(
+                                loading = loading,
+                                recipes = recipes,
+                                page = page,
+                                onChangeRecipeScrollPosition = viewModel::onChangeRecipeScrollPosition,
+                                onTriggerEvent = viewModel::onTriggerEvent,
+                                scaffoldState = scaffoldState
+                            )
                         }
                     )
                 }
